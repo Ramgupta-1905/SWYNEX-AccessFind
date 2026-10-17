@@ -1998,17 +1998,19 @@ width: 60%;
 
 
 /* CTA Section */
+/* CTA Section */
 .cta-section {
   position: relative;
   isolation: isolate;
   width: 100%;
-  min-height: 340px;
-  padding: 48px 0;
+  height: 170px;
+  min-height: 0px;
+  padding: 20px 0;
   overflow: hidden;
-  background-color: #eaf4ff;
+  background-color: #eaf5ff;
 }
 
-/* Family image background */
+/* Background image */
 .cta-background {
   position: absolute;
   inset: 0;
@@ -2017,7 +2019,8 @@ width: 60%;
   height: 100%;
   display: block;
   object-fit: cover;
-  object-position: center;
+  object-position: center 58%;
+  opacity: 0.62;
   pointer-events: none;
 }
 
@@ -2026,12 +2029,13 @@ width: 60%;
   position: relative;
   z-index: 1;
   width: min(1200px, calc(100% - 64px));
-  min-height: 244px;
+  height: ;
+  min-height: 185px;
   margin: 0 auto;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  gap: 32px;
+  gap: 28px;
 }
 
 /* Left text */
@@ -2041,10 +2045,10 @@ width: 60%;
 }
 
 .cta-content h2 {
-  margin: 0 0 16px;
+  margin: 0 0 10px;
   color: #16345c;
-  font-size: clamp(30px, 3.2vw, 44px);
-  line-height: 1.15;
+  font-size: clamp(26px, 2.8vw, 38px);
+  line-height: 1.12;
   font-weight: 750;
   letter-spacing: -1px;
 }
@@ -2057,9 +2061,9 @@ width: 60%;
 .cta-content p {
   max-width: 600px;
   margin: 0;
-  color: #53657b;
-  font-size: 15px;
-  line-height: 1.8;
+  color: #405976;
+  font-size: 13px;
+  line-height: 1.6;
 }
 
 /* Right button and trust text */
@@ -2067,7 +2071,7 @@ width: 60%;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 16px;
+  gap: 12px;
 }
 
 .cta-button {
@@ -2075,12 +2079,12 @@ width: 60%;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  padding: 15px 20px;
+  padding: 12px 17px;
   border: none;
   border-radius: 8px;
   background: #2474d2;
   color: #fff;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   white-space: nowrap;
   cursor: pointer;
@@ -2096,9 +2100,9 @@ width: 60%;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 12px;
-  color: #53657b;
-  font-size: 12px;
+  gap: 9px;
+  color: #405976;
+  font-size: 11px;
 }
 
 .cta-trust-divider {
@@ -2108,25 +2112,57 @@ width: 60%;
   background: #2474d2;
 }
 
-/* Responsive layout */
-@media (max-width: 700px) {
+/* Tablet */
+@media (max-width: 900px) {
   .cta-section {
-    padding: 36px 0;
+    min-height: 225px;
   }
 
   .cta-container {
-    width: calc(100% - 36px);
-    grid-template-columns: 1fr;
-    gap: 24px;
+    width: calc(100% - 40px);
+    min-height: 185px;
+    gap: 18px;
+  }
+
+  .cta-content h2 {
+    font-size: clamp(24px, 3.2vw, 32px);
+  }
+
+  .cta-content p {
+    font-size: 12px;
   }
 
   .cta-background {
     object-position: center;
-    opacity: 0.35;
+    opacity: 0.45;
+  }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .cta-section {
+    min-height: 0;
+    padding: 28px 0;
+  }
+
+  .cta-container {
+    width: calc(100% - 36px);
+    min-height: 0;
+    grid-template-columns: 1fr;
+    gap: 18px;
   }
 
   .cta-content h2 {
-    font-size: 32px;
+    font-size: 28px;
+  }
+
+  .cta-content p {
+    font-size: 13px;
+  }
+
+  .cta-background {
+    opacity: 0.3;
+    object-position: center;
   }
 
   .cta-action {
@@ -2536,97 +2572,1061 @@ width: 60%;
   right: calc(clamp(18px, 2vw, 30px) / -1 - 4px);
 }
 
-/* Nearby facilities: a strong two-column showcase, not a full-screen blank panel. */
+
+/* ============================================
+   ACCESSFIND — FACILITY PREVIEW
+   Complete CSS
+============================================ */
+
 .facility-preview {
-  display: flex;
-  align-items: center;
-  background: linear-gradient(125deg, #f0f7ff 0%, #ffffff 52%, #f3f9ff 100%);
-  border-bottom: 1px solid var(--accessfind-section-line);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: 38px 22px 44px;
+  border-bottom: 1px solid #e1edf9;
+  background:
+    radial-gradient(
+      ellipse at 0% 100%,
+      rgba(145, 232, 203, 0.2),
+      transparent 33%
+    ),
+    radial-gradient(
+      ellipse at 45% 0%,
+      rgba(116, 192, 255, 0.15),
+      transparent 43%
+    ),
+    linear-gradient(115deg, #f1f8ff 0%, #fff 54%, #effaff 100%);
 }
 
 .facility-preview-container {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  align-items: center;
+  gap: clamp(28px, 3vw, 44px);
   width: 100%;
-  max-width: 1360px;
-  grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
-  gap: clamp(30px, 4vw, 60px);
+  max-width: 1320px;
+  margin: 0 auto;
 }
 
-.facility-map {
-  height: clamp(270px, 39vh, 380px);
-  border-radius: 18px;
-  box-shadow: 0 18px 42px rgba(16, 32, 71, 0.09);
+/* ============================================
+   DECORATIVE LEAVES
+============================================ */
+
+.facility-leaves {
+  position: absolute;
+  z-index: 1;
+  bottom: -25px;
+  left: -22px;
+  width: 245px;
+  height: 235px;
+  pointer-events: none;
+  opacity: 0.88;
 }
 
-.facility-map-card {
-  right: 16px;
+.facility-leaf {
+  position: absolute;
+  display: block;
+  width: 100px;
+  height: 48px;
+  border-radius: 100% 0 100% 0;
+  background: linear-gradient(140deg, #a8e0a6, #238659);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.13);
+  transform-origin: 0 100%;
+}
+
+.facility-leaf::after {
+  position: absolute;
+  top: 50%;
+  left: 7%;
+  width: 86%;
+  height: 1px;
+  content: "";
+  background: rgba(255, 255, 255, 0.42);
+  transform: rotate(-12deg);
+}
+
+.leaf-a {
   bottom: 16px;
-  left: 16px;
-  gap: 12px;
-  padding: 12px;
-  border: 1px solid rgba(225, 234, 245, 0.9);
-  border-radius: 14px;
-  box-shadow: 0 10px 28px rgba(16, 32, 71, 0.13);
+  left: 0;
+  transform: rotate(-24deg);
 }
 
-.facility-card-photo {
-  width: 58px;
-  height: 58px;
-  border-radius: 9px;
+.leaf-b {
+  bottom: 44px;
+  left: 38px;
+  background: linear-gradient(140deg, #9bdc9a, #48a66e);
+  transform: rotate(-5deg);
 }
 
-.facility-card-info h3 {
-  font-size: 13px;
+.leaf-c {
+  bottom: 26px;
+  left: 108px;
+  background: linear-gradient(140deg, #69c98b, #16845a);
+  transform: rotate(28deg);
 }
 
-.facility-card-info p {
+.leaf-d {
+  bottom: 92px;
+  left: 33px;
+  width: 82px;
+  height: 40px;
+  background: linear-gradient(140deg, #c5e9b6, #60b977);
+  transform: rotate(-45deg);
+}
+
+.leaf-e {
+  bottom: 90px;
+  left: 120px;
+  width: 83px;
+  height: 39px;
+  background: linear-gradient(140deg, #8bd29a, #2e965f);
+  transform: rotate(20deg);
+}
+
+.leaf-f {
+  bottom: 7px;
+  left: 165px;
+  width: 76px;
+  height: 37px;
+  background: linear-gradient(140deg, #9bdaa0, #39945f);
+  transform: rotate(48deg);
+}
+
+/* Remove the decorative WC building scene */
+.facility-scene {
+  display: none !important;
+}
+
+/* ============================================
+   MAP CANVAS
+============================================ */
+
+.facility-preview .facility-map {
+  position: relative;
+  isolation: isolate;
+  display: block;
+  min-width: 0;
+  height: clamp(330px, 32vw, 450px);
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.95);
+  border-radius: 18px;
+  background: #eaf3e6;
+  box-shadow: 0 22px 55px rgba(34, 93, 150, 0.13);
+}
+
+.facility-map-scenery {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  background-color: #edf2e8;
+  background-image:
+    linear-gradient(
+      35deg,
+      transparent 46%,
+      #fff 47%,
+      #fff 49%,
+      transparent 50%
+    ),
+    linear-gradient(
+      145deg,
+      transparent 39%,
+      #fff 40%,
+      #fff 42%,
+      transparent 43%
+    ),
+    linear-gradient(
+      90deg,
+      transparent 47%,
+      rgba(255, 255, 255, 0.9) 48%,
+      rgba(255, 255, 255, 0.9) 50%,
+      transparent 51%
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent 0 57px,
+      rgba(203, 216, 201, 0.25) 58px 59px
+    );
+}
+
+.map-river {
+  position: absolute;
+  top: -15%;
+  right: -12%;
+  width: 33%;
+  height: 83%;
+  transform: rotate(-23deg);
+  border: 9px solid rgba(255, 255, 255, 0.78);
+  border-radius: 45%;
+  background: #9edcf1;
+}
+
+.map-park {
+  position: absolute;
+  border: 1px solid rgba(132, 189, 137, 0.25);
+  border-radius: 25%;
+  background:
+    radial-gradient(
+      circle at 25% 30%,
+      rgba(255, 255, 255, 0.45) 0 3%,
+      transparent 4%
+    ),
+    radial-gradient(
+      circle at 70% 65%,
+      rgba(121, 190, 126, 0.23) 0 5%,
+      transparent 6%
+    ),
+    #cce8c3;
+}
+
+.park-one {
+  top: 33%;
+  left: 2%;
+  width: 28%;
+  height: 27%;
+  transform: rotate(-10deg);
+}
+
+.park-two {
+  top: 6%;
+  right: 18%;
+  width: 20%;
+  height: 20%;
+  transform: rotate(12deg);
+}
+
+.park-three {
+  right: 5%;
+  bottom: 3%;
+  width: 25%;
+  height: 22%;
+  transform: rotate(-8deg);
+}
+
+.park-four {
+  bottom: 20%;
+  left: 31%;
+  width: 17%;
+  height: 15%;
+  transform: rotate(8deg);
+}
+
+.map-road {
+  position: absolute;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 0 0 1px rgba(213, 221, 213, 0.4);
+}
+
+.road-one {
+  top: 42%;
+  left: -12%;
+  width: 125%;
+  height: 15px;
+  transform: rotate(-12deg);
+}
+
+.road-two {
+  top: -12%;
+  left: 39%;
+  width: 14px;
+  height: 130%;
+  transform: rotate(24deg);
+}
+
+.road-three {
+  top: 6%;
+  left: -8%;
+  width: 120%;
+  height: 12px;
+  transform: rotate(34deg);
+}
+
+.road-four {
+  top: 68%;
+  left: -9%;
+  width: 120%;
+  height: 13px;
+  transform: rotate(-31deg);
+}
+
+.road-five {
+  top: -10%;
+  right: 16%;
+  width: 13px;
+  height: 125%;
+  transform: rotate(-33deg);
+}
+
+.road-six {
+  top: 20%;
+  left: -10%;
+  width: 120%;
+  height: 9px;
+  transform: rotate(55deg);
+}
+
+.map-place {
+  position: absolute;
+  z-index: 2;
+  color: #326d54;
   font-size: 10px;
+  font-weight: 750;
 }
 
-.facility-card-tags span {
-  min-height: 22px;
+.place-city {
+  top: 35%;
+  left: 27%;
+}
+
+.place-park {
+  top: 49%;
+  left: 9%;
+}
+
+.place-river {
+  top: 26%;
+  right: 6%;
+}
+
+.place-metro {
+  bottom: 18%;
+  left: 28%;
+}
+
+/* ============================================
+   MAP PINS AND CURRENT LOCATION
+============================================ */
+
+.facility-preview .facility-map-pin {
+  position: absolute;
+  z-index: 3;
+  display: grid;
+  width: 32px;
+  height: 37px;
+  place-items: center;
+  color: #fff;
+  border: 2px solid #fff;
+  border-radius: 50% 50% 50% 8px;
+  background: #0878f9;
+  box-shadow: 0 5px 12px rgba(0, 94, 220, 0.28);
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.facility-preview .facility-map-pin svg {
+  display: block;
+  flex-shrink: 0;
+  width: 15px;
+  height: 15px;
+  transform: rotate(45deg);
+}
+
+.facility-preview .facility-map-pin.accessible {
+  background: #079669;
+  box-shadow: 0 5px 12px rgba(5, 150, 105, 0.25);
+}
+
+.facility-current-location {
+  position: absolute;
+  z-index: 4;
+  top: 56%;
+  left: 36%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 8px;
+  transform: translate(-50%, -50%);
+}
+
+.location-pulse {
+  width: 22px;
+  height: 22px;
+  border: 4px solid #fff;
+  border-radius: 50%;
+  background: #0878f9;
+  box-shadow:
+    0 0 0 8px rgba(8, 120, 249, 0.14),
+    0 0 0 18px rgba(8, 120, 249, 0.07);
+}
+
+.facility-current-location b {
+  padding: 6px 10px;
+  color: #fff;
   font-size: 9px;
+  white-space: nowrap;
+  border-radius: 7px;
+  background: #0878f9;
 }
 
-.facility-card-directions {
-  padding: 10px 13px;
-  border-radius: 8px;
-  font-size: 10px;
+/* ============================================
+   SEARCH BAR AND FILTERS
+============================================ */
+
+.facility-preview .facility-map-toolbar {
+  position: absolute;
+  z-index: 8;
+  top: 13px;
+  right: 13px;
+  left: 13px;
+  display: block;
+  min-width: 0;
 }
 
-.facility-preview-eyebrow {
+.facility-preview .facility-map-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+  min-height: 46px;
+  box-sizing: border-box;
+  padding: 0 9px 0 12px;
+  color: #536b86;
+  border: 1px solid #e1eaf5;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.97);
+  box-shadow: 0 8px 25px rgba(34, 68, 112, 0.1);
+}
+
+.facility-preview .facility-map-search > svg {
+  flex-shrink: 0;
+}
+
+.facility-preview .facility-map-search > span {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
   font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.facility-preview-content h2 {
-  max-width: 560px;
+.facility-preview .facility-map-search button {
+  display: grid;
+  flex: 0 0 31px;
+  width: 31px;
+  height: 31px;
+  place-items: center;
+  padding: 0;
+  color: #0878f9;
+  border: 0;
+  border-radius: 9px;
+  background: #edf5ff;
+  cursor: pointer;
+}
+
+.facility-preview .facility-map-filters {
+  display: flex;
+  gap: 5px;
+  width: 100%;
+  margin-top: 7px;
+  overflow-x: auto;
+  padding-bottom: 3px;
+  scrollbar-width: none;
+}
+
+.facility-preview .facility-map-filters::-webkit-scrollbar {
+  display: none;
+}
+
+.facility-preview .facility-filter {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 8px 9px;
+  color: #254366;
+  font-size: 8px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  border: 1px solid #e2ebf6;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.98);
+}
+
+.facility-preview .facility-filter svg {
+  flex-shrink: 0;
+  width: 13px;
+  height: 13px;
+  color: #0878f9;
+}
+
+.facility-preview .facility-filter.active {
+  color: #fff;
+  border-color: #0878f9;
+  background: #0878f9;
+}
+
+.facility-preview .facility-filter.active svg {
+  color: #fff;
+}
+
+/* ============================================
+   FLOATING FACILITY CARD
+============================================ */
+
+.facility-preview .facility-map-card {
+  position: absolute;
+  z-index: 7;
+  right: 12px;
+  bottom: 75px;
+  left: auto;
+  display: block;
+  width: min(365px, calc(100% - 24px));
+  min-width: 0;
+  max-width: none;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 11px;
+  border: 1px solid #e3edf7;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 16px 42px rgba(29, 57, 93, 0.18);
+}
+
+.facility-preview .facility-card-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+  display: grid;
+  width: 25px;
+  height: 25px;
+  place-items: center;
+  padding: 0;
+  color: #7d8fa7;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.facility-preview .facility-card-close:hover {
+  color: #17365e;
+  background: #eef5fc;
+}
+
+.facility-preview .facility-card-heading {
+  display: grid;
+  grid-template-columns: 70px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+}
+
+.facility-preview .facility-card-photo {
+  display: grid;
+  width: 70px;
+  height: 68px;
+  min-width: 0;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 9px;
+  background: linear-gradient(145deg, #d4ecdc, #a6d9c5);
+}
+
+.facility-preview .restroom-illustration {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  width: 100%;
+  height: 100%;
+  color: #0878a7;
+  background: linear-gradient(135deg, #d9f0e2, #a6d6ce);
+}
+
+.facility-preview .facility-card-main {
+  display: block;
+  min-width: 0;
+  width: 100%;
+}
+
+.facility-preview .facility-card-title {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
+  min-width: 0;
+  padding-right: 19px;
+}
+
+.facility-preview .facility-card-title h3 {
+  display: block;
+  flex: 0 1 auto;
+  width: auto;
+  min-width: 0;
+  margin: 0;
+  color: #17365e;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.4;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+.facility-preview .facility-card-title > span {
+  display: inline-block;
+  flex: 0 0 auto;
+  padding: 3px 5px;
+  color: #7754b5;
+  font-size: 8px;
+  font-weight: 700;
+  line-height: 1.2;
+  border-radius: 6px;
+  background: #f1eaff;
+}
+
+.facility-preview .facility-card-main p {
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+  width: 100%;
+  margin: 5px 0 0;
+  color: #647894;
+  font-size: 9px;
+  line-height: 1.45;
+}
+
+.facility-preview .facility-card-main p svg {
+  flex: 0 0 13px;
+  width: 13px;
+  height: 13px;
+  margin-top: 1px;
+}
+
+.facility-preview .facility-card-main p span {
+  min-width: 0;
+}
+
+.facility-preview .facility-card-status {
+  color: #16965e !important;
+}
+
+.facility-preview .facility-card-tags {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
   margin-top: 9px;
-  font-size: clamp(29px, 2.8vw, 40px);
-  line-height: 1.12;
-  letter-spacing: -0.9px;
 }
 
-.facility-preview-description {
-  max-width: 540px;
-  margin-top: 13px;
-  font-size: clamp(13px, 0.95vw, 14px);
+.facility-preview .facility-card-tags span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: auto;
+  min-width: 0;
+  padding: 6px;
+  color: #24586b;
+  font-size: 8px;
+  font-weight: 650;
+  line-height: 1.25;
+  white-space: nowrap;
+  border: 1px solid #d6eee7;
+  border-radius: 8px;
+  background: #eaf8f3;
+}
+
+.facility-preview .facility-card-tags svg {
+  flex-shrink: 0;
+  width: 12px;
+  height: 12px;
+}
+
+/* ============================================
+   MAP LEGEND AND CAPTION
+   Zoom/location controls intentionally removed
+============================================ */
+
+.facility-preview .facility-map-legend {
+  position: absolute;
+  z-index: 5;
+  bottom: 12px;
+  left: 12px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 9px;
+  color: #365473;
+  font-size: 8px;
+  font-weight: 650;
+  border: 1px solid #e2ebf6;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.97);
+  box-shadow: 0 5px 14px rgba(34, 68, 112, 0.08);
+}
+
+.facility-preview .facility-map-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.facility-preview .facility-map-legend i {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.facility-preview .legend-blue {
+  background: #0878f9;
+}
+
+.facility-preview .legend-location {
+  background: #51b6ff;
+}
+
+.facility-preview .facility-map-caption {
+  position: absolute;
+  z-index: 4;
+  top: 105px;
+  right: 12px;
+  padding: 6px 7px;
+  color: #536b86;
+  font-size: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.92);
+}
+
+/* ============================================
+   RIGHT COLUMN
+============================================ */
+
+.facility-preview .facility-preview-content {
+  display: block;
+  min-width: 0;
+}
+
+.facility-preview .facility-preview-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 10px;
+  color: #086be0;
+  font-size: 10px;
+  font-weight: 750;
+  border: 1px solid #d5e8ff;
+  border-radius: 999px;
+  background: #eaf4ff;
+}
+
+.facility-preview .facility-preview-content h2 {
+  display: block;
+  margin: 16px 0 0;
+  color: #17365e;
+  font-size: clamp(28px, 2.65vw, 40px);
+  font-weight: 850;
+  line-height: 1.1;
+  letter-spacing: -1px;
+}
+
+.facility-preview .facility-preview-content h2 span {
+  display: inline;
+  color: #0878f9;
+}
+
+.facility-preview .facility-preview-description {
+  max-width: 580px;
+  margin: 12px 0 0;
+  color: #687d99;
+  font-size: 12px;
   line-height: 1.7;
 }
 
-.facility-benefits {
-  gap: 11px;
-  margin-top: 18px;
+.facility-preview .facility-benefits {
+  display: grid;
+  gap: 14px;
+  margin-top: 21px;
 }
 
-.facility-benefits li {
+.facility-preview .facility-benefit {
+  display: grid;
+  grid-template-columns: 47px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.facility-preview .facility-benefit-icon {
+  display: grid;
+  width: 47px;
+  height: 49px;
+  place-items: center;
+  border: 1px solid transparent;
+  border-radius: 13px;
+}
+
+.facility-preview .facility-benefit-icon.blue {
+  color: #0878f9;
+  border-color: #d2e6ff;
+  background: #e8f3ff;
+}
+
+.facility-preview .facility-benefit-icon.green {
+  color: #119b6d;
+  border-color: #d1f2e4;
+  background: #e5faf0;
+}
+
+.facility-preview .facility-benefit-icon.purple {
+  color: #8850f6;
+  border-color: #e7d9ff;
+  background: #f1eaff;
+}
+
+.facility-preview .facility-benefit-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.facility-preview .facility-benefit-copy {
+  min-width: 0;
+}
+
+.facility-preview .facility-benefit h3 {
+  margin: 0;
+  color: #17365e;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.45;
+}
+
+.facility-preview .facility-benefit p {
+  margin: 4px 0 0;
+  color: #71839d;
+  font-size: 10px;
+  line-height: 1.55;
+}
+
+.facility-preview .facility-preview-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   gap: 9px;
-  font-size: clamp(12px, 0.85vw, 13px);
+  min-height: 43px;
+  margin-top: 22px;
+  padding: 0 20px;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 750;
+  border: 0;
+  border-radius: 10px;
+  background: #0878f9;
+  box-shadow: 0 8px 20px rgba(8, 120, 249, 0.18);
+  cursor: pointer;
+  transition: background 180ms ease, transform 180ms ease;
 }
 
-.facility-preview-link {
-  gap: 8px;
-  margin-top: 18px;
-  font-size: 13px;
+.facility-preview .facility-preview-link:hover {
+  background: #0668dc;
+  transform: translateY(-2px);
 }
+
+.facility-preview .facility-preview-note {
+  margin: 9px 0 0;
+  color: #9aa9bd;
+  font-size: 9px;
+  line-height: 1.6;
+}
+
+/* ============================================
+   TABLET
+============================================ */
+
+@media (max-width: 1100px) {
+  .facility-preview {
+    padding: 42px 20px;
+  }
+
+  .facility-preview-container {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 30px;
+    max-width: 760px;
+  }
+
+  .facility-preview .facility-map {
+    height: clamp(360px, 55vw, 440px);
+  }
+
+  .facility-preview .facility-preview-content h2 {
+    font-size: clamp(30px, 4.5vw, 40px);
+  }
+}
+
+/* ============================================
+   MOBILE
+============================================ */
+
+@media (max-width: 600px) {
+  .facility-preview {
+    padding: 32px 12px 38px;
+  }
+
+  .facility-preview-container {
+    gap: 24px;
+  }
+
+  .facility-preview .facility-map {
+    height: 400px;
+  }
+
+  .facility-preview .facility-map-toolbar {
+    top: 10px;
+    right: 9px;
+    left: 9px;
+  }
+
+  .facility-preview .facility-map-search {
+    min-height: 43px;
+    gap: 6px;
+    padding: 0 7px 0 9px;
+  }
+
+  .facility-preview .facility-map-search > span {
+    font-size: 9px;
+  }
+
+  .facility-preview .facility-map-search button {
+    flex-basis: 29px;
+    width: 29px;
+    height: 29px;
+  }
+
+  .facility-preview .facility-map-filters {
+    gap: 5px;
+    margin-top: 7px;
+  }
+
+  .facility-preview .facility-filter {
+    gap: 4px;
+    padding: 7px;
+    font-size: 8px;
+  }
+
+  .facility-preview .facility-map-card {
+    right: 8px;
+    bottom: 61px;
+    width: calc(100% - 16px);
+    padding: 9px;
+  }
+
+  .facility-preview .facility-card-heading {
+    grid-template-columns: 55px minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .facility-preview .facility-card-photo {
+    width: 55px;
+    height: 58px;
+  }
+
+  .facility-preview .facility-card-title h3 {
+    font-size: 10px;
+  }
+
+  .facility-preview .facility-card-main p {
+    font-size: 8px;
+  }
+
+  .facility-preview .facility-card-tags {
+    gap: 4px;
+    margin-top: 8px;
+  }
+
+  .facility-preview .facility-card-tags span {
+    padding: 5px;
+    font-size: 8px;
+    white-space: normal;
+  }
+
+  .facility-preview .facility-map-legend {
+    bottom: 10px;
+    left: 8px;
+    gap: 6px;
+    padding: 7px;
+    font-size: 8px;
+  }
+
+  .facility-preview .facility-map-caption {
+    top: 102px;
+    right: 8px;
+    padding: 5px;
+    font-size: 7px;
+  }
+
+  .map-place {
+    font-size: 8px;
+  }
+
+  .facility-preview .facility-preview-content h2 {
+    margin-top: 14px;
+    font-size: clamp(27px, 7.5vw, 35px);
+  }
+
+  .facility-preview .facility-preview-description {
+    font-size: 11px;
+    line-height: 1.7;
+  }
+
+  .facility-preview .facility-benefits {
+    gap: 13px;
+    margin-top: 19px;
+  }
+
+  .facility-preview .facility-benefit {
+    grid-template-columns: 42px minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  .facility-preview .facility-benefit-icon {
+    width: 42px;
+    height: 44px;
+  }
+
+  .facility-preview .facility-benefit h3 {
+    font-size: 10px;
+  }
+
+  .facility-preview .facility-benefit p {
+    font-size: 9px;
+  }
+
+  .facility-preview .facility-preview-link {
+    width: 100%;
+    min-height: 42px;
+    margin-top: 20px;
+  }
+
+  .facility-preview .facility-preview-note {
+    font-size: 9px;
+  }
+
+  .facility-leaves {
+    bottom: -45px;
+    left: -45px;
+    transform: scale(0.72);
+    transform-origin: bottom left;
+    opacity: 0.35;
+  }
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .facility-preview .facility-preview-link {
+    transition: none;
+  }
+}
+
 
 /* Audience: stronger cards and illustration space, with compact rhythm. */
 .audience-section {
