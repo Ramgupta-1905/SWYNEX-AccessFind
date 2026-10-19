@@ -1,16 +1,12 @@
-
 import { ArrowRight } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import heroFamilyIllustration from '../../assets/images/hero-family-illustration.png'
 
 export default function CTASection() {
-  function handleFindFacilities() {
-    document.getElementById('home')?.scrollIntoView({
-      behavior: 'smooth',
-    })
+  const navigate = useNavigate()
 
-    window.setTimeout(() => {
-      document.querySelector('#home input')?.focus()
-    }, 400)
+  function handleFindFacilities() {
+    navigate('/facilities')
   }
 
   return (

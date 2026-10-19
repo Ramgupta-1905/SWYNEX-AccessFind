@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   MapPin,
   Search,
@@ -13,42 +14,40 @@ export default function Hero() {
   const [location, setLocation] = useState('')
   const [locationError, setLocationError] = useState('')
 
+  const navigate = useNavigate()
+
   function handleSearch(event) {
     event.preventDefault()
 
     const searchLocation = location.trim()
 
-    if (!searchLocation) {
-      setLocationError('Please enter a city, area, or landmark.')
-      return
-    }
-
     setLocationError('')
 
-    window.dispatchEvent(
-      new CustomEvent('accessfind:search', {
-        detail: { location: searchLocation },
-      }),
-    )
-
-    document.getElementById('facilities')?.scrollIntoView({
-      behavior: 'smooth',
-    })
+    if (searchLocation) {
+      navigate('/facilities', {
+        state: { location: searchLocation },
+      })
+    } else {
+      navigate('/facilities')
+    }
   }
 
   function handleCurrentLocation() {
     setLocationError('')
 
     if (!navigator.geolocation) {
-      setLocationError('Your browser does not support location access.')
+      setLocationError(
+        'Your browser does not support location access.',
+      )
       return
     }
 
     navigator.geolocation.getCurrentPosition(
       ({ coords }) => {
-        setLocation(
-          `${coords.latitude.toFixed(5)}, ${coords.longitude.toFixed(5)}`,
-        )
+        const currentLocation =
+          `${coords.latitude.toFixed(5)}, ${coords.longitude.toFixed(5)}`
+
+        setLocation(currentLocation)
         setLocationError('')
       },
       () => {
@@ -110,7 +109,10 @@ export default function Hero() {
           )}
 
           <div className="hero-quick-links">
-            <button type="button" onClick={handleCurrentLocation}>
+            <button
+              type="button"
+              onClick={handleCurrentLocation}
+            >
               <LocateFixed size={13} />
               Use my current location
             </button>

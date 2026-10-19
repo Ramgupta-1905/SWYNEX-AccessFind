@@ -1,5 +1,6 @@
 
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import {
   MapPin,
   Search,
@@ -12,7 +13,7 @@ const navLinks = [
   { label: 'About', href: '#about' },
   { label: 'Features', href: '#features' },
   { label: 'How It Works', href: '#how-it-works' },
-  { label: 'Facilities', href: '#facilities' },
+  { label: 'Facilities', href: '/facilities', route: true },
   { label: 'Contact', href: '#contact' },
 ]
 
@@ -45,33 +46,43 @@ export default function Navbar() {
 
         {/* Desktop navigation */}
         <div className="hidden items-center gap-6 lg:flex xl:gap-8">
-          {navLinks.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              className={`relative py-2 text-[13px] font-semibold transition-colors ${
-                link.label === 'Home'
-                  ? 'text-blue-600'
-                  : 'text-slate-600 hover:text-blue-600'
-              }`}
-            >
-              {link.label}
+          {navLinks.map((link) =>
+            link.route ? (
+              <Link
+                key={link.label}
+                to={link.href}
+                className="relative py-2 text-[13px] font-semibold text-slate-600 transition-colors hover:text-blue-600"
+              >
+                {link.label}
+              </Link>
+            ) : (
+              <a
+                key={link.label}
+                href={link.href}
+                className={`relative py-2 text-[13px] font-semibold transition-colors ${
+                  link.label === 'Home'
+                    ? 'text-blue-600'
+                    : 'text-slate-600 hover:text-blue-600'
+                }`}
+              >
+                {link.label}
 
-              {link.label === 'Home' && (
-                <span className="absolute right-0 bottom-[-20px] left-0 h-0.5 rounded-full bg-blue-600" />
-              )}
-            </a>
-          ))}
+                {link.label === 'Home' && (
+                  <span className="absolute right-0 bottom-[-20px] left-0 h-0.5 rounded-full bg-blue-600" />
+                )}
+              </a>
+            ),
+          )}
         </div>
 
         {/* Desktop CTA */}
-        <a
-          href="#facilities"
+        <Link
+          to="/facilities"
           className="hidden items-center gap-2 rounded-xl bg-blue-700 px-4 py-2.5 text-[13px] font-bold text-white shadow-md shadow-blue-700/15 transition hover:bg-blue-800 sm:inline-flex"
         >
           <Search size={15} strokeWidth={2.5} />
           Find Facilities
-        </a>
+        </Link>
 
         {/* Mobile menu toggle */}
         <button
@@ -93,25 +104,36 @@ export default function Navbar() {
           className="border-t border-slate-100 bg-white px-5 py-4 shadow-lg lg:hidden"
         >
           <div className="mx-auto flex max-w-7xl flex-col gap-1">
-            {navLinks.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                onClick={closeMenu}
-                className="rounded-xl px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-blue-50 hover:text-blue-700"
-              >
-                {link.label}
-              </a>
-            ))}
+            {navLinks.map((link) =>
+              link.route ? (
+                <Link
+                  key={link.label}
+                  to={link.href}
+                  onClick={closeMenu}
+                  className="rounded-xl px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-blue-50 hover:text-blue-700"
+                >
+                  {link.label}
+                </Link>
+              ) : (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  onClick={closeMenu}
+                  className="rounded-xl px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-blue-50 hover:text-blue-700"
+                >
+                  {link.label}
+                </a>
+              ),
+            )}
 
-            <a
-              href="#facilities"
+            <Link
+              to="/facilities"
               onClick={closeMenu}
               className="mt-2 inline-flex items-center justify-center gap-2 rounded-xl bg-blue-700 px-4 py-3 text-sm font-bold text-white transition hover:bg-blue-800"
             >
               <Search size={16} />
               Find Facilities
-            </a>
+            </Link>
           </div>
         </div>
       )}
