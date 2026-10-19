@@ -1,3 +1,4 @@
+
 import {
   MapPin,
   Heart,
@@ -8,6 +9,39 @@ import {
   Navigation,
   Info,
 } from 'lucide-react'
+
+const FACILITY_IMAGES = {
+  restroom:
+    'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=900&q=80',
+  mall:
+    'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=500&q=80',
+  metro:
+    'https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=900&q=80',
+  park:
+    'https://images.unsplash.com/photo-1519331379826-f10be5486c6f?auto=format&fit=crop&w=900&q=80',
+  hospital:
+    'https://images.unsplash.com/photo-1586773860418-d37222d8fce3?auto=format&fit=crop&w=900&q=80',
+}
+
+function getFacilityImage(facility) {
+  const name = facility.name.toLowerCase()
+
+  if (name.includes('metro') || name.includes('station')) {
+    return FACILITY_IMAGES.metro
+  }
+
+  if (name.includes('mall')) return FACILITY_IMAGES.mall
+
+  if (name.includes('park')) return FACILITY_IMAGES.park
+
+  if (name.includes('community')) return FACILITY_IMAGES.park
+
+  if (name.includes('hospital') || name.includes('medical')) {
+    return FACILITY_IMAGES.hospital
+  }
+
+  return FACILITY_IMAGES.restroom
+}
 
 export default function FacilityDetails({
   facility,
@@ -41,14 +75,39 @@ export default function FacilityDetails({
   return (
     <aside className="facility-details">
       <div className="facility-details-photo">
+        <div
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            display: 'grid',
+            placeItems: 'center',
+            background: 'linear-gradient(135deg, #dcefe9, #d6e5f8)',
+          }}
+        >
+          <MapPin size={36} color="#477bb8" />
+        </div>
+
         <img
-          src={facility.image}
-          alt={facility.name}
+          src={getFacilityImage(facility)}
+          alt={`${facility.name} preview`}
+          loading="lazy"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            zIndex: 1,
+          }}
           onError={(event) => {
             event.currentTarget.style.display = 'none'
           }}
         />
-        <span className="facility-photo-label">{facility.hours}</span>
+
+        <span className="facility-photo-label">
+          {facility.hours}
+        </span>
       </div>
 
       <div className="facility-details-content">
@@ -65,7 +124,10 @@ export default function FacilityDetails({
               isFavorite ? 'Remove saved facility' : 'Save facility'
             }
           >
-            <Heart size={21} fill={isFavorite ? 'currentColor' : 'none'} />
+            <Heart
+              size={21}
+              fill={isFavorite ? 'currentColor' : 'none'}
+            />
           </button>
         </div>
 
@@ -79,7 +141,10 @@ export default function FacilityDetails({
             <Accessibility size={15} />
             {facility.distance.toFixed(1)} km away
           </span>
-          <span className={facility.open ? 'status-open' : 'status-closed'}>
+
+          <span
+            className={facility.open ? 'status-open' : 'status-closed'}
+          >
             <span className="facility-status-dot">●</span>
             {facility.open ? 'Open Now' : 'Closed'}
           </span>
@@ -93,23 +158,41 @@ export default function FacilityDetails({
         <h3>Accessibility Features</h3>
 
         <div className="facility-feature-grid">
-          <div className={facility.wheelchair ? 'feature-available' : 'feature-unavailable'}>
+          <div
+            className={
+              facility.wheelchair
+                ? 'feature-available'
+                : 'feature-unavailable'
+            }
+          >
             <Accessibility size={25} />
             <span>Wheelchair</span>
             <span>Accessible</span>
             {facility.wheelchair && <CheckCircle2 size={14} />}
           </div>
 
-          <div className={facility.babyChanging ? 'feature-available' : 'feature-unavailable'}>
+          <div
+            className={
+              facility.babyChanging
+                ? 'feature-available'
+                : 'feature-unavailable'
+            }
+          >
             <Baby size={25} />
             <span>Baby</span>
             <span>Changing</span>
             {facility.babyChanging && <CheckCircle2 size={14} />}
           </div>
 
-          <div className={facility.free ? 'feature-available' : 'feature-unavailable'}>
+          <div
+            className={
+              facility.free
+                ? 'feature-available'
+                : 'feature-unavailable'
+            }
+          >
             <strong>{facility.free ? 'FREE' : 'PAID'}</strong>
-            <span>{facility.free ? 'Free to' : 'Paid'} </span>
+            <span>{facility.free ? 'Free to' : 'Paid'}</span>
             <span>Use</span>
             {facility.free && <CheckCircle2 size={14} />}
           </div>
@@ -153,10 +236,15 @@ export default function FacilityDetails({
 
           <button
             type="button"
-            className={`facility-save-button ${isFavorite ? 'is-saved' : ''}`}
+            className={`facility-save-button ${
+              isFavorite ? 'is-saved' : ''
+            }`}
             onClick={onFavorite}
           >
-            <Heart size={18} fill={isFavorite ? 'currentColor' : 'none'} />
+            <Heart
+              size={18}
+              fill={isFavorite ? 'currentColor' : 'none'}
+            />
             {isFavorite ? 'Saved' : 'Save Facility'}
           </button>
         </div>
