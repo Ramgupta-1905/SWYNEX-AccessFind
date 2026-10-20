@@ -1,79 +1,148 @@
-import { MapPin, LocateFixed, Plus, Minus } from 'lucide-react'
-import { useState } from 'react'
+
+import { useEffect } from 'react'
+import {
+  APIProvider,
+  Map,
+  Marker,
+  Pin,
+  useApiIsLoaded,
+  useMap,
+} from '@vis.gl/react-google-maps'
+
+const DEFAULT_CENTER = {
+  lat: 28.628,
+  lng: 77.364,
+}
+
+function MapContent({
+  facilities,
+  selectedFacility,
+  onSelectFacility,
+  currentLocation,
+}) {
+  const isLoaded = useApiIsLoaded()
+  const map = useMap('accessfind-map')
+
+  useEffect(() => {
+    if (!map) return
+
+    const coordinates = selectedFacility?.coordinates || currentLocation
+
+    if (
+      coordinates &&
+      Number.isFinite(coordinates.lat) &&
+      Number.isFinite(coordinates.lng)
+    ) {
+      map.panTo(coordinates)
+      map.setZoom(selectedFacility?.coordinates ? 16 : 14)
+    }
+  }, [
+    map,
+    selectedFacility?.id,
+    selectedFacility?.coordinates?.lat,
+    selectedFacility?.coordinates?.lng,
+    currentLocation?.lat,
+    currentLocation?.lng,
+  ])
+
+  if (!isLoaded) {
+    return (
+      <div className="finder-map-message" role="status">
+        Loading Google Map…
+      </div>
+    )
+  }
+
+  return (
+    <Map
+      id="accessfind-map"
+      defaultCenter={currentLocation || DEFAULT_CENTER}
+      defaultZoom={14}
+      mapTypeControl={false}
+      streetViewControl={false}
+      fullscreenControl
+      gestureHandling="greedy"
+      style={{ width: '100%', height: '100%' }}
+    >
+      {currentLocation &&
+        Number.isFinite(currentLocation.lat) &&
+        Number.isFinite(currentLocation.lng) && (
+          <Marker
+            position={currentLocation}
+            title="Your current or searched location"
+            zIndex={1000}
+          >
+            <Pin
+              background="#0878f9"
+              borderColor="#ffffff"
+              glyphColor="#ffffff"
+            />
+          </Marker>
+        )}
+
+      {facilities.map((facility) => {
+        const position = facility.coordinates
+
+        if (
+          !position ||
+          !Number.isFinite(position.lat) ||
+          !Number.isFinite(position.lng)
+        ) {
+          return null
+        }
+
+        const isSelected = selectedFacility?.id === facility.id
+
+        return (
+          <Marker
+            key={facility.id}
+            position={position}
+            title={facility.name || 'Public toilet'}
+            onClick={() => onSelectFacility(facility)}
+            zIndex={isSelected ? 100 : 1}
+          >
+            <Pin
+              background={isSelected ? '#0878f9' : '#16a085'}
+              borderColor="#ffffff"
+              glyphColor="#ffffff"
+              scale={isSelected ? 1.35 : 1}
+            />
+          </Marker>
+        )
+      })}
+    </Map>
+  )
+}
 
 export default function FacilityMap({
-  facilities,
-  selectedId,
-  onSelect,
+  facilities = [],
+  selectedFacility = null,
+  onSelectFacility = () => {},
+  currentLocation = null,
 }) {
-  const [zoom, setZoom] = useState(1)
+  const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
+
+  if (!apiKey) {
+    return (
+      <section className="finder-map-panel" aria-label="Facility map">
+        <div className="finder-map-message" role="alert">
+          Google Maps API key is missing. Check your .env.local file.
+        </div>
+      </section>
+    )
+  }
 
   return (
     <section className="finder-map-panel" aria-label="Facility map">
       <div className="finder-map">
-        <div
-          className="finder-map-art"
-          style={{ transform: `scale(${zoom})` }}
-        >
-          <div className="map-park map-park-one" />
-          <div className="map-park map-park-two" />
-          <div className="map-water" />
-
-          <div className="map-road map-road-one" />
-          <div className="map-road map-road-two" />
-          <div className="map-road map-road-three" />
-          <div className="map-road map-road-four" />
-          <div className="map-road map-road-five" />
-          <div className="map-road map-road-six" />
-          <div className="map-road map-road-seven" />
-
-          <span className="map-label map-label-park">CENTRAL PARK</span>
-          <span className="map-label map-label-city">CITY MALL</span>
-          <span className="map-label map-label-metro">METRO STATION</span>
-          <span className="map-label map-label-river">RIVERSIDE PARK</span>
-
-          {facilities.map((facility) => (
-            <button
-              key={facility.id}
-              type="button"
-              className={`map-marker ${
-                selectedId === facility.id ? 'is-active' : ''
-              }`}
-              style={facility.position}
-              onClick={() => onSelect(facility.id)}
-              aria-label={`Select ${facility.name}`}
-              title={facility.name}
-            >
-              <MapPin size={24} fill="currentColor" />
-            </button>
-          ))}
-        </div>
-
-        <div className="finder-map-area-button">
-          <LocateFixed size={17} />
-          <span>Sample map</span>
-        </div>
-
-        <div className="finder-map-zoom">
-          <button
-            type="button"
-            aria-label="Zoom in"
-            onClick={() => setZoom((current) => Math.min(1.25, current + 0.1))}
-          >
-            <Plus size={19} />
-          </button>
-          <button
-            type="button"
-            aria-label="Zoom out"
-            onClick={() => setZoom((current) => Math.max(0.85, current - 0.1))}
-          >
-            <Minus size={19} />
-          </button>
-        </div>
-
-        <div className="finder-map-attribution">
-          Illustrative map · Sample locations
-        </div>
+        <APIProvider apiKey={apiKey}>
+          <MapContent
+            facilities={facilities}
+            selectedFacility={selectedFacility}
+            onSelectFacility={onSelectFacility}
+            currentLocation={currentLocation}
+          />
+        </APIProvider>
       </div>
     </section>
   )

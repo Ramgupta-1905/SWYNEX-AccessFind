@@ -1,4 +1,5 @@
 
+import { useEffect, useState } from 'react'
 import {
   MapPin,
   Heart,
@@ -8,46 +9,154 @@ import {
   CheckCircle2,
   Navigation,
   Info,
+  CircleHelp,
+  IndianRupee,
+  ExternalLink,
 } from 'lucide-react'
 
-const FACILITY_IMAGES = {
-  restroom:
-    'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=900&q=80',
-  mall:
-    'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=500&q=80',
-  metro:
-    'https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=900&q=80',
-  park:
-    'https://images.unsplash.com/photo-1519331379826-f10be5486c6f?auto=format&fit=crop&w=900&q=80',
-  hospital:
-    'https://images.unsplash.com/photo-1586773860418-d37222d8fce3?auto=format&fit=crop&w=900&q=80',
+const PHOTON_URL = 'https://photon.komoot.io/reverse'
+
+function FeatureStatus({ value, label }) {
+  const known = value === true || value === false
+
+  return (
+    <div
+      className={
+        !known
+          ? 'feature-unavailable'
+          : value
+            ? 'feature-available'
+            : 'feature-unavailable'
+      }
+    >
+      {label === 'Wheelchair accessible' ? (
+        <Accessibility size={25} />
+      ) : label === 'Baby changing' ? (
+        <Baby size={25} />
+      ) : label === 'Free to use' ? (
+        value === true ? (
+          <strong>FREE</strong>
+        ) : value === false ? (
+          <IndianRupee size={25} />
+        ) : (
+          <CircleHelp size={25} />
+        )
+      ) : (
+        <Clock3 size={25} />
+      )}
+
+      <span>{label}</span>
+
+      <span>
+        {!known
+          ? 'Information unavailable'
+          : value
+            ? 'Available'
+            : 'Not listed as available'}
+      </span>
+
+      {known && value && <CheckCircle2 size={14} />}
+    </div>
+  )
 }
 
-function getFacilityImage(facility) {
-  const name = facility.name.toLowerCase()
+function formatPhotonAddress(properties = {}) {
+  const street = [
+    properties.housenumber,
+    properties.street,
+  ]
+    .filter(Boolean)
+    .join(' ')
 
-  if (name.includes('metro') || name.includes('station')) {
-    return FACILITY_IMAGES.metro
-  }
+  const parts = [
+    street,
+    properties.name && !street ? properties.name : null,
+    properties.district,
+    properties.city || properties.town || properties.village,
+    properties.state,
+    properties.postcode,
+    properties.country,
+  ].filter(Boolean)
 
-  if (name.includes('mall')) return FACILITY_IMAGES.mall
-
-  if (name.includes('park')) return FACILITY_IMAGES.park
-
-  if (name.includes('community')) return FACILITY_IMAGES.park
-
-  if (name.includes('hospital') || name.includes('medical')) {
-    return FACILITY_IMAGES.hospital
-  }
-
-  return FACILITY_IMAGES.restroom
+  return [...new Set(parts)].join(', ') || null
 }
 
 export default function FacilityDetails({
   facility,
   isFavorite,
   onFavorite,
+  onClose,
 }) {
+  const [lookedUpAddress, setLookedUpAddress] = useState(null)
+  const [addressLookupStatus, setAddressLookupStatus] = useState('idle')
+
+  useEffect(() => {
+    setLookedUpAddress(null)
+    setAddressLookupStatus('idle')
+
+    if (!facility || facility.address || !facility.coordinates) {
+      return
+    }
+
+    const { lat, lng } = facility.coordinates
+
+    if (
+      !Number.isFinite(lat) ||
+      !Number.isFinite(lng) ||
+      lat < -90 ||
+      lat > 90 ||
+      lng < -180 ||
+      lng > 180
+    ) {
+      return
+    }
+
+    const controller = new AbortController()
+
+    async function lookupAddress() {
+      setAddressLookupStatus('loading')
+
+      try {
+        const params = new URLSearchParams({
+          lat: String(lat),
+          lon: String(lng),
+        })
+
+        const response = await fetch(
+          `${PHOTON_URL}?${params.toString()}`,
+          { signal: controller.signal },
+        )
+
+        if (!response.ok) {
+          throw new Error('Address lookup failed')
+        }
+
+        const data = await response.json()
+        const properties = data.features?.[0]?.properties
+
+        if (!controller.signal.aborted) {
+          const address = formatPhotonAddress(properties)
+
+          setLookedUpAddress(address)
+          setAddressLookupStatus(address ? 'success' : 'unavailable')
+        }
+      } catch (error) {
+        if (error.name !== 'AbortError') {
+          setAddressLookupStatus('unavailable')
+        }
+      }
+    }
+
+    lookupAddress()
+
+    return () => controller.abort()
+  }, [
+    facility?.id,
+    facility?.address,
+    facility?.coordinates?.lat,
+    facility?.coordinates?.lng,
+  ])
+
   if (!facility) {
     return (
       <aside className="facility-details">
@@ -60,59 +169,71 @@ export default function FacilityDetails({
     )
   }
 
-  function openDirections() {
-    const query = encodeURIComponent(
-      `${facility.name}, ${facility.address}`,
-    )
+  const distance = Number.isFinite(facility.distance)
+    ? `${facility.distance.toFixed(1)} km away`
+    : 'Distance unavailable'
 
-    window.open(
-      `https://www.google.com/maps/search/?api=1&query=${query}`,
-      '_blank',
-      'noopener,noreferrer',
-    )
+  const openingHours = facility.hours || 'Hours not listed'
+  const address = facility.address || lookedUpAddress
+
+  function openDirections() {
+    const { lat, lng } = facility.coordinates || {}
+
+    const query =
+      Number.isFinite(lat) && Number.isFinite(lng)
+        ? `${lat},${lng}`
+        : [facility.name, address]
+            .filter(Boolean)
+            .join(', ')
+
+    const url = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(query)}`
+
+    window.open(url, '_blank', 'noopener,noreferrer')
   }
 
   return (
     <aside className="facility-details">
       <div className="facility-details-photo">
-        <div
-          aria-hidden="true"
-          style={{
-            position: 'absolute',
-            inset: 0,
-            display: 'grid',
-            placeItems: 'center',
-            background: 'linear-gradient(135deg, #dcefe9, #d6e5f8)',
-          }}
-        >
-          <MapPin size={36} color="#477bb8" />
-        </div>
-
-        <img
-          src={getFacilityImage(facility)}
-          alt={`${facility.name} preview`}
-          loading="lazy"
-          style={{
-            position: 'absolute',
-            inset: 0,
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            zIndex: 1,
-          }}
-          onError={(event) => {
-            event.currentTarget.style.display = 'none'
-          }}
-        />
+        {facility.image ? (
+          <img
+            src={facility.image}
+            alt={facility.name || 'Public toilet'}
+            loading="lazy"
+            style={{
+              position: 'absolute',
+              inset: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              zIndex: 1,
+            }}
+            onError={(event) => {
+              event.currentTarget.style.display = 'none'
+            }}
+          />
+        ) : (
+          <div
+            aria-label="No facility photo available"
+            style={{
+              position: 'absolute',
+              inset: 0,
+              display: 'grid',
+              placeItems: 'center',
+              background: 'linear-gradient(135deg, #dcefe9, #d6e5f8)',
+            }}
+          >
+            <MapPin size={36} color="#477bb8" />
+          </div>
+        )}
 
         <span className="facility-photo-label">
-          {facility.hours}
+          {openingHours}
         </span>
       </div>
 
       <div className="facility-details-content">
         <div className="facility-details-title-row">
-          <h2>{facility.name}</h2>
+          <h2>{facility.name || 'Public Toilet'}</h2>
 
           <button
             type="button"
@@ -133,74 +254,66 @@ export default function FacilityDetails({
 
         <p className="facility-details-address">
           <MapPin size={17} />
-          {facility.address}
+          {address ||
+            (addressLookupStatus === 'loading'
+              ? 'Looking up address…'
+              : 'Address not available')}
         </p>
 
         <div className="facility-details-status">
           <span>
             <Accessibility size={15} />
-            {facility.distance.toFixed(1)} km away
+            {distance}
           </span>
 
           <span
-            className={facility.open ? 'status-open' : 'status-closed'}
+            className={
+              facility.open === true
+                ? 'status-open'
+                : facility.open === false
+                  ? 'status-closed'
+                  : ''
+            }
           >
             <span className="facility-status-dot">●</span>
-            {facility.open ? 'Open Now' : 'Closed'}
+            {facility.open === true
+              ? 'Open Now'
+              : facility.open === false
+                ? 'Closed'
+                : 'Opening status unknown'}
           </span>
         </div>
 
         <div className="facility-details-notice">
           <Info size={19} />
-          <p>{facility.description}</p>
+          <p>
+            {facility.description ||
+              'Additional information is not available for this facility.'}
+          </p>
         </div>
 
-        <h3>Accessibility Features</h3>
+        <h3>Accessibility & Facilities</h3>
 
         <div className="facility-feature-grid">
-          <div
-            className={
-              facility.wheelchair
-                ? 'feature-available'
-                : 'feature-unavailable'
-            }
-          >
-            <Accessibility size={25} />
-            <span>Wheelchair</span>
-            <span>Accessible</span>
-            {facility.wheelchair && <CheckCircle2 size={14} />}
-          </div>
+          <FeatureStatus
+            value={facility.wheelchair}
+            label="Wheelchair accessible"
+          />
 
-          <div
-            className={
-              facility.babyChanging
-                ? 'feature-available'
-                : 'feature-unavailable'
-            }
-          >
-            <Baby size={25} />
-            <span>Baby</span>
-            <span>Changing</span>
-            {facility.babyChanging && <CheckCircle2 size={14} />}
-          </div>
+          <FeatureStatus
+            value={facility.babyChanging}
+            label="Baby changing"
+          />
 
-          <div
-            className={
-              facility.free
-                ? 'feature-available'
-                : 'feature-unavailable'
-            }
-          >
-            <strong>{facility.free ? 'FREE' : 'PAID'}</strong>
-            <span>{facility.free ? 'Free to' : 'Paid'}</span>
-            <span>Use</span>
-            {facility.free && <CheckCircle2 size={14} />}
-          </div>
+          <FeatureStatus
+            value={facility.free}
+            label="Free to use"
+          />
 
-          <div className="feature-available">
+          <div className="feature-unavailable">
             <Clock3 size={25} />
-            <span>{facility.hours}</span>
             <span>Opening hours</span>
+            <span>{openingHours}</span>
           </div>
         </div>
 
@@ -211,16 +324,8 @@ export default function FacilityDetails({
 
         <div className="facility-opening-table">
           <div>
-            <span>Monday – Friday</span>
-            <span>{facility.hours}</span>
-          </div>
-          <div>
-            <span>Saturday</span>
-            <span>{facility.hours}</span>
-          </div>
-          <div>
-            <span>Sunday</span>
-            <span>{facility.hours}</span>
+            <span>Reported hours</span>
+            <span>{openingHours}</span>
           </div>
         </div>
 
@@ -249,9 +354,18 @@ export default function FacilityDetails({
           </button>
         </div>
 
-        <p className="facility-demo-note">
-          Sample facility information for demonstration.
-        </p>
+        {facility.osmUrl && (
+          <p className="facility-demo-note">
+            Source:{' '}
+            <a
+              href={facility.osmUrl}
+              target="_blank"
+              rel="noreferrer"
+            >
+              OpenStreetMap <ExternalLink size={12} />
+            </a>
+          </p>
+        )}
       </div>
     </aside>
   )

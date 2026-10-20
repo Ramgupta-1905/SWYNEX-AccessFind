@@ -3682,3 +3682,338 @@
     padding: 0;
   }
 }
+
+/* =====================================================
+   REAL-WORLD PRODUCT POLISH — content panels only
+   Navbar styles intentionally left unchanged.
+   ===================================================== */
+.finder-page {
+  color: #14233f;
+  background: #f4f7fb;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.finder-layout > .facility-list,
+.finder-layout > .facility-details {
+  border: 1px solid #e4eaf2;
+  background: #ffffff;
+  box-shadow: 0 4px 18px rgba(25, 48, 83, 0.045);
+}
+
+.facility-list-header h2 {
+  color: #14233f;
+  letter-spacing: -0.2px;
+}
+
+.facility-list-header p,
+.facility-list-subtitle {
+  color: #718096;
+}
+
+.finder-sort select {
+  border-color: #dce4ef;
+  background-color: #fff;
+  box-shadow: 0 1px 2px rgba(16, 37, 75, 0.025);
+}
+
+.facility-card {
+  border-color: #e5ebf3;
+  box-shadow: 0 1px 3px rgba(20, 42, 75, 0.025);
+  transition: border-color 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+}
+
+.facility-card:hover {
+  border-color: #c5d8f5;
+  background: #fcfdff;
+  box-shadow: 0 5px 14px rgba(25, 60, 110, 0.07);
+}
+
+.facility-card.is-selected {
+  border-color: #2b73ed;
+  background: #f5f9ff;
+  box-shadow: inset 3px 0 0 #2b73ed, 0 2px 7px rgba(23, 105, 239, 0.045);
+}
+
+.facility-card-name {
+  color: #14233f;
+  letter-spacing: -0.12px;
+}
+
+.facility-card-address,
+.facility-card-distance {
+  color: #63748b;
+}
+
+.facility-card-badges > span {
+  color: #264b85;
+  background: #f0f5fc;
+}
+
+.facility-card-badges .facility-free-badge {
+  color: #174b9b;
+  background: #eaf2ff;
+}
+
+.finder-layout > .finder-map-panel {
+  border: 1px solid #e0e8f1;
+  box-shadow: 0 4px 18px rgba(25, 48, 83, 0.045);
+}
+
+.map-marker {
+  filter: drop-shadow(0 2px 3px rgba(20, 49, 91, 0.22));
+}
+
+.finder-map-zoom {
+  border-color: #dce5ef;
+  box-shadow: 0 3px 10px rgba(20, 42, 75, 0.11);
+}
+
+.finder-layout > .facility-details {
+  scrollbar-color: #d2dce9 transparent;
+}
+
+.facility-details-title-row h2 {
+  color: #14233f;
+  letter-spacing: -0.35px;
+}
+
+.facility-details-address {
+  color: #586b84;
+}
+
+.facility-details-status {
+  color: #607189;
+}
+
+.facility-details-notice {
+  border: 1px solid #e1edfc;
+  color: #24466f;
+  background: #f0f6ff;
+}
+
+.facility-feature-grid > div {
+  border: 1px solid #e8eef7;
+  background: #f7f9fd;
+  transition: border-color 150ms ease, background-color 150ms ease;
+}
+
+.facility-feature-grid > div:hover {
+  border-color: #d5e3f8;
+  background: #f1f6ff;
+}
+
+.facility-opening-table {
+  border-color: #e7edf5;
+  background: #fff;
+}
+
+.facility-opening-table > div {
+  color: #586b84;
+  background: #fff;
+}
+
+.facility-opening-table > div + div {
+  border-top-color: #edf1f6;
+}
+
+.facility-details-actions button {
+  transition: background-color 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
+}
+
+.facility-directions-button:hover {
+  box-shadow: 0 2px 7px rgba(23, 105, 239, 0.08);
+}
+
+.facility-save-button:hover {
+  box-shadow: 0 4px 10px rgba(23, 105, 239, 0.18);
+}
+
+.finder-empty-state,
+.finder-empty-details {
+  color: #718096;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .facility-card,
+  .facility-feature-grid > div,
+  .facility-details-actions button {
+    transition: none;
+  }
+}
+
+/* =====================================================
+   LOCATION AUTOCOMPLETE — FIXED DROPDOWN & SEARCH CONTROL
+   Appended overrides; existing layout and styles preserved.
+===================================================== */
+
+.finder-page .finder-navbar-search {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+  z-index: 30;
+  overflow: visible;
+}
+
+.finder-page .finder-search-toolbar {
+  position: relative;
+  overflow: visible;
+}
+
+.finder-page .finder-search-form {
+  position: relative;
+  z-index: 2;
+  overflow: visible;
+}
+
+/* Keep the outer search field border, but remove the inner input outline. */
+.finder-page .finder-search-form input,
+.finder-page .finder-search-form input:focus,
+.finder-page .finder-search-form input:focus-visible {
+  border: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent;
+}
+
+/* Use the component's own clear button, not a browser-provided one. */
+.finder-page .finder-search-form input[type="search"] {
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.finder-page .finder-search-form input::-webkit-search-cancel-button,
+.finder-page .finder-search-form input::-webkit-search-decoration,
+.finder-page .finder-search-form input::-webkit-search-results-button,
+.finder-page .finder-search-form input::-webkit-search-results-decoration {
+  display: none;
+  -webkit-appearance: none;
+}
+
+.finder-page .finder-search-clear {
+  display: inline-flex;
+  flex: 0 0 24px;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  outline: none;
+  box-shadow: none;
+  color: #718099;
+  background: transparent;
+  font-size: 19px;
+  line-height: 1;
+}
+
+.finder-page .finder-search-clear:hover {
+  color: #1769ef;
+  background: transparent;
+}
+
+/* Autocomplete list: positioned under the search bar, above page content. */
+.finder-page .finder-location-suggestions {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  left: 0;
+  z-index: 1000;
+  display: block;
+  max-height: 320px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  border: 1px solid #e1e8f1;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.14);
+  color: #10254b;
+}
+
+.finder-page .finder-location-suggestions li {
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+.finder-page .finder-location-suggestions li button {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  min-height: 42px;
+  padding: 11px 12px;
+  border: 0;
+  border-radius: 8px;
+  color: #10254b;
+  background: transparent;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.45;
+  text-align: left;
+  white-space: normal;
+  cursor: pointer;
+}
+
+.finder-page .finder-location-suggestions li button svg {
+  flex: 0 0 16px;
+  margin-top: 2px;
+  color: #61718a;
+}
+
+.finder-page .finder-location-suggestions li button span {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.finder-page .finder-location-suggestions li button:hover,
+.finder-page .finder-location-suggestions li button.is-active {
+  color: #1055d6;
+  background: #edf5ff;
+}
+
+.finder-page .finder-suggestion-empty {
+  padding: 12px;
+  color: #61718a;
+  font-size: 13px;
+}
+
+.finder-page .finder-suggestion-status {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  left: 0;
+  z-index: 1001;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 14px;
+  border: 1px solid #e1e8f1;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.12);
+  color: #61718a;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.finder-page > .finder-header {
+  z-index: 100;
+  overflow: visible;
+}
+
+@media (max-width: 760px) {
+  .finder-page .finder-navbar-search {
+    flex: 1 1 100%;
+    width: 100%;
+  }
+
+  .finder-page .finder-location-suggestions {
+    max-height: 280px;
+  }
+}
